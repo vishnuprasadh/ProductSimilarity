@@ -28,8 +28,8 @@ class SimilarProcessorByTitle:
     '''
     def __init__(self, loaddefault=False,data=None):
         if loaddefault and data==None:
-            print( os.path.join(os.path.abspath(os.path.curdir), 'Engine/data/sampledata.csv'))
-            self.data = pd.read_csv( os.path.join( os.path.abspath(os.path.curdir), 'Engine/data/sampledata.csv'),delimiter=',',header='infer')
+            print( os.path.join(os.path.split(os.path.abspath(__file__))[0], 'data/sampledata.csv'))
+            self.data = pd.read_csv( os.path.join( os.path.split(os.path.abspath(__file__))[0], 'data/sampledata.csv'),delimiter=',',header='infer')
         elif loaddefault:
             self.data = data
 
