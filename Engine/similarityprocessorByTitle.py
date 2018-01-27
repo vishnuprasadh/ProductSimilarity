@@ -4,6 +4,7 @@ from Engine.textutils import TextUtils
 import nltk
 from collections import OrderedDict
 from Engine.DistanceAlgorithmType import DistanceAlgorithmType
+import os
 
 '''
     This is the Object  which will be called by services that need to pull similar items.
@@ -27,7 +28,8 @@ class SimilarProcessorByTitle:
     '''
     def __init__(self, loaddefault=False,data=None):
         if loaddefault and data==None:
-            self.data = pd.read_csv('sampledata.csv',delimiter=',',header='infer')
+            print( os.path.join(os.path.abspath(os.path.curdir), 'Engine/data/sampledata.csv'))
+            self.data = pd.read_csv( os.path.join( os.path.abspath(os.path.curdir), 'Engine/data/sampledata.csv'),delimiter=',',header='infer')
         elif loaddefault:
             self.data = data
 
