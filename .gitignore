@@ -4,3 +4,7 @@
 *.xml
 
 *.iml
+
+*.pb
+
+.idea/sonarlint/issuestore/d/9/d920901ffe9dcfb2a0fdf127b117e68a3a86f82e

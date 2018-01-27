@@ -13,9 +13,9 @@ from DistanceAlgorithmType import DistanceAlgorithmType
     The logic is based on the title of the product alone using the Levenshtein distance algorithm.
     We can easily add more logic here to customize based on other parameters
     
-    @@getTopSimilarTextItems is to be used for getting the closest items for a given SKU.
+    @@gettopsimilartextItems is to be used for getting the closest items for a given SKU.
 '''
-class similarprocessorByTitle:
+class SimilarProcessorByTitle:
 
     #Dataset against which we will need to put similarity quotient.
     data = pd.DataFrame()
@@ -41,16 +41,16 @@ class similarprocessorByTitle:
     Returns the list of all Products as per @Product model. Key would have @Product model and value would have the distance.
     The order for distance will be from low to high which means closest to farthest.
     '''
-    def getTopSimilarTextItems(self, inputSKU="A034",topN=10,algo=DistanceAlgorithmType.Levenshtein):
+    def gettopsimilartextItems(self, inputSKU="A034", topN=10, algo=DistanceAlgorithmType.Levenshtein):
         filteredData = []
         #Set the data for given SKU
         item = self.__getItemDataGivenSKU(inputSKU);
 
         if item:
             #Get the filtered data for the category of InputSKU
-            filteredData = self.__getFilteredCategoryItemData(item)
+            filteredData = self.__getfilteredcategoryitemdata(item)
             #Get sorted list of items filtered by TopN
-            filteredData = self.__calculateSimilarity(baseItem=item,filteredCategoryData=filteredData,topN=topN,algo=algo)
+            filteredData = self.__calculatesimilarity(baseItem=item, filteredCategoryData=filteredData, topN=topN, algo=algo)
 
         self.baseItem = None
         self.data = None
@@ -67,10 +67,10 @@ class similarprocessorByTitle:
         else:
             #load data for the given SKU and set the baseItem
             self.baseItem = None
-        return self.__initializeBaseItemData()
+        return self.__initializebaseitemdata()
 
     'Creates the @Product domain model once baseItem data is set. If  empty then returns None'
-    def __initializeBaseItemData(self):
+    def __initializebaseitemdata(self):
         rootItem = None
         # if base item exists
         if not self.baseItem.empty:
@@ -82,7 +82,7 @@ class similarprocessorByTitle:
     '''
     Get the filtered category item data for the given Item
     '''
-    def __getFilteredCategoryItemData(self, rootItem):
+    def __getfilteredcategoryitemdata(self, rootItem):
         if self.data.empty:
             #Make call to load the  data for the given SKU
             self.data = None
@@ -100,7 +100,7 @@ class similarprocessorByTitle:
     This function uses by default Levenshtein algorithms.
     We can also set to other options in future.
     '''
-    def __calculateSimilarity(self, baseItem, filteredCategoryData,topN ,algo):
+    def __calculatesimilarity(self, baseItem, filteredCategoryData, topN, algo):
         allitems = dict()
         # For each item which is in fitleredData
         for item in filteredCategoryData.iterrows():
@@ -118,15 +118,15 @@ class similarprocessorByTitle:
 
 if __name__ == '__main__':
     for sku in ["A034", "A018", "A021"]:
-        similar = similarprocessorByTitle(True)
-        items1 = similar.getTopSimilarTextItems(sku,5, DistanceAlgorithmType.Levenshtein)
+        similar = SimilarProcessorByTitle(True)
+        items1 = similar.gettopsimilartextItems(sku, 5, DistanceAlgorithmType.Levenshtein)
         for key in items1.items():
             print(key[0].title)
         print("--------------completed for levenshtein-----------\n")
 
     for sku in ["A039", "A007", "A013"]:
-        similar2 = similarprocessorByTitle(True)
-        items1 = similar2.getTopSimilarTextItems(sku, 5, DistanceAlgorithmType.Levenshtein)
+        similar2 = SimilarProcessorByTitle(True)
+        items1 = similar2.gettopsimilartextItems(sku, 5, DistanceAlgorithmType.Levenshtein)
         for key in items1.items():
             print(key[0].title)
         print("--------------completed for Binary-----------\n")
