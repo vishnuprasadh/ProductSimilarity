@@ -1,12 +1,9 @@
 import pandas as pd
-import  csv
-import numpy as np
-import product as p
-from productModel import ProductModel
-from textutils import TextUtils
+from Engine.productModel import ProductModel
+from Engine.textutils import TextUtils
 import nltk
 from collections import OrderedDict
-from DistanceAlgorithmType import DistanceAlgorithmType
+from Engine.DistanceAlgorithmType import DistanceAlgorithmType
 
 '''
     This is the Object  which will be called by services that need to pull similar items.

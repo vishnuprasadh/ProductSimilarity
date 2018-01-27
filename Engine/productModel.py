@@ -1,4 +1,4 @@
-import product as p
+from Engine import product as p
 import pandas as pd
 
 class ProductModel:
