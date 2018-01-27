@@ -6,6 +6,7 @@ from productModel import ProductModel
 from textutils import TextUtils
 import nltk
 from collections import OrderedDict
+from DistanceAlgorithmType import DistanceAlgorithmType
 
 '''
     This is the Object  which will be called by services that need to pull similar items.
@@ -40,7 +41,7 @@ class similarprocessorByTitle:
     Returns the list of all Products as per @Product model. Key would have @Product model and value would have the distance.
     The order for distance will be from low to high which means closest to farthest.
     '''
-    def getTopSimilarTextItems(self, inputSKU="A034",topN=10):
+    def getTopSimilarTextItems(self, inputSKU="A034",topN=10,algo=DistanceAlgorithmType.Levenshtein):
         filteredData = []
         #Set the data for given SKU
         item = self.__getItemDataGivenSKU(inputSKU);
@@ -49,7 +50,10 @@ class similarprocessorByTitle:
             #Get the filtered data for the category of InputSKU
             filteredData = self.__getFilteredCategoryItemData(item)
             #Get sorted list of items filtered by TopN
-            filteredData = self.__calculateSimilarity(baseItem=item,filteredCategoryData=filteredData,topN=topN)
+            filteredData = self.__calculateSimilarity(baseItem=item,filteredCategoryData=filteredData,topN=topN,algo=algo)
+
+        self.data = pd.DataFrame()
+
         return filteredData
 
 
@@ -95,20 +99,30 @@ class similarprocessorByTitle:
     This function uses by default Levenshtein algorithms.
     We can also set to other options in future.
     '''
-    def __calculateSimilarity(self, baseItem, filteredCategoryData,topN ):
+    def __calculateSimilarity(self, baseItem, filteredCategoryData,topN ,algo):
         allitems = dict()
         # For each item which is in fitleredData
         for item in filteredCategoryData.iterrows():
             currentItem = ProductModel.populate(item[1])
             currentItem.title = TextUtils.CleanText(currentItem.title)
             #Get the Source category and Title.
-            allitems[currentItem] = nltk.edit_distance(baseItem.title, currentItem.title)
+            if algo == DistanceAlgorithmType.Levenshtein:
+                allitems[currentItem] = nltk.edit_distance(baseItem.title, currentItem.title)
+            elif algo == DistanceAlgorithmType.Binary:
+                allitems[currentItem] = nltk.binary_distance(baseItem.title,currentItem.title)
         print("Base title is {}".format(baseItem.title))
         return  OrderedDict(sorted(allitems.items(),key= lambda k : k[1] ))
 
 
 if __name__ == '__main__':
     similar = similarprocessorByTitle(True)
-    items = similar.getTopSimilarTextItems("A004",5)
-    for key in items.items():
+    items1 = similar.getTopSimilarTextItems("A004",5, DistanceAlgorithmType.Levenshtein)
+    for key in items1.items():
         print(key[0].title)
+    print("--------------completed for levenshtein-----------\n")
+
+    similar2 = similarprocessorByTitle(True)
+    items1 = similar2.getTopSimilarTextItems("A004", 5, DistanceAlgorithmType.Binary)
+    for key in items1.items():
+        print(key[0].title)
+    print("--------------completed for Binary-----------\n")
