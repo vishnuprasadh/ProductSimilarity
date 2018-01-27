@@ -52,7 +52,8 @@ class similarprocessorByTitle:
             #Get sorted list of items filtered by TopN
             filteredData = self.__calculateSimilarity(baseItem=item,filteredCategoryData=filteredData,topN=topN,algo=algo)
 
-        self.data = pd.DataFrame()
+        self.baseItem = None
+        self.data = None
 
         return filteredData
 
@@ -111,18 +112,21 @@ class similarprocessorByTitle:
             elif algo == DistanceAlgorithmType.Binary:
                 allitems[currentItem] = nltk.binary_distance(baseItem.title,currentItem.title)
         print("Base title is {}".format(baseItem.title))
-        return  OrderedDict(sorted(allitems.items(),key= lambda k : k[1] ))
+        #Here also filter by topN and return
+        return  OrderedDict(sorted(allitems.items(),key= lambda k : k[1] )[:topN])
 
 
 if __name__ == '__main__':
-    similar = similarprocessorByTitle(True)
-    items1 = similar.getTopSimilarTextItems("A004",5, DistanceAlgorithmType.Levenshtein)
-    for key in items1.items():
-        print(key[0].title)
-    print("--------------completed for levenshtein-----------\n")
+    for sku in ["A034", "A018", "A021"]:
+        similar = similarprocessorByTitle(True)
+        items1 = similar.getTopSimilarTextItems(sku,5, DistanceAlgorithmType.Levenshtein)
+        for key in items1.items():
+            print(key[0].title)
+        print("--------------completed for levenshtein-----------\n")
 
-    similar2 = similarprocessorByTitle(True)
-    items1 = similar2.getTopSimilarTextItems("A004", 5, DistanceAlgorithmType.Binary)
-    for key in items1.items():
-        print(key[0].title)
-    print("--------------completed for Binary-----------\n")
+    for sku in ["A039", "A007", "A013"]:
+        similar2 = similarprocessorByTitle(True)
+        items1 = similar2.getTopSimilarTextItems(sku, 5, DistanceAlgorithmType.Levenshtein)
+        for key in items1.items():
+            print(key[0].title)
+        print("--------------completed for Binary-----------\n")
