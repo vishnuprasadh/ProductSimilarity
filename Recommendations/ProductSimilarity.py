@@ -3,7 +3,6 @@ from Engine.similarityprocessorByTitle import SimilarProcessorByTitle as similar
 from Engine.product import Product
 
 app = Flask(__name__)
-#productsimilarity = Blueprint('productsimilariy', __name__)
 
 @app.route('/productsimilarity/<sku>/<top>')
 def getsimilarproducts(sku,top):
@@ -38,4 +37,4 @@ def getsimilarproducts(sku,top):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=8099,threaded=True)
