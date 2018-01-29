@@ -5,12 +5,11 @@ The above can easily be enhanced to add more classification or dependant attribu
 
 <b> Installation </b>
 
-As of now, you just need to install the basic nltk and sklearn libraries with python for us to get this working.
+As of now, you just need to install the basic nltk library with python for us to get this working.
 
 ```
 pip install nltk
 
-pip install sklearn
 ```
 Note: Use --upgrade depending on the version you have.
 
